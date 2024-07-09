@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "670196376100",
+    "project_id": "justachat-96e7d",
+    "storage_bucket": "justachat-96e7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670196376100:android:9fa5c1dcf10e48d5676eb1",
+        "android_client_info": {
+          "package_name": "com.example.nice_chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDldS3dyqSnd3F5jYZrIon-k8fMjUx8n6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
