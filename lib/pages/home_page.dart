@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../components/my_app_bar.dart';
 import '../components/my_drawer.dart';
 import '../components/user_tile.dart';
+import '../models/message.dart';
 import '../services/auth/auth_service.dart';
 import '../services/chat/chat_service.dart';
 import 'chat_page.dart';
@@ -13,7 +14,7 @@ class HomePage extends StatelessWidget {
   final AuthService _authService = AuthService();
 
   Widget _buildUserList() {
-    return StreamBuilder<List<Map<String, dynamic>>>(
+    return StreamBuilder<List<Users>>(
       stream: _chatService.getUsersStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -24,28 +25,29 @@ class HomePage extends StatelessWidget {
         }
         return ListView(
           children: snapshot.data!
-              .map<Widget>((userData) => _buildUserListItem(userData, context))
+              .map<Widget>((user) => _buildUserListItem(user, context))
               .toList(),
         );
       },
     );
   }
 
-  Widget _buildUserListItem(
-      Map<String, dynamic> userData, BuildContext context) {
-    if (_authService.getCurrentUser()!.email != userData["email"]) {
+  Widget _buildUserListItem(Users user, BuildContext context) {
+    if (_authService.getCurrentUser()!.email != user.email) {
       return UserTile(
-        text: userData["email"],
-        onTap: () {
+        user: user,
+        onTap: () async {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ChatPage(
-                receiverEmail: userData["email"],
-                receiverID: userData["uid"],
+                receiverEmail: user.email,
+                receiverID: user.uid,
               ),
             ),
           );
+          await _chatService.markMessagesAsRead(
+              _authService.getCurrentUser()!.uid, user.uid);
         },
       );
     } else {

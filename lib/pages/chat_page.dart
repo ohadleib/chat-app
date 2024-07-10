@@ -35,6 +35,10 @@ class _ChatPageState extends State<ChatPage> {
       }
     });
     Future.delayed(const Duration(milliseconds: 500), _scrollDown);
+
+    // Mark messages as read when entering the chat page
+    _chatService.markMessagesAsRead(
+        _authService.getCurrentUser()!.uid, widget.receiverID);
   }
 
   @override

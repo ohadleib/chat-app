@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../models/message.dart';
+
 class UserTile extends StatelessWidget {
-  final String text;
+  final Users user;
   final void Function()? onTap;
 
-  const UserTile({required this.text, required this.onTap});
+  const UserTile({required this.user, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +23,28 @@ class UserTile extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Icon(
-                Icons.person,
-                color: Theme.of(context).colorScheme.primary,
+              child: Stack(
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  if (user.hasUnreadMessages)
+                    Positioned(
+                      right: 0,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-            Text(text),
+            Text(user.email),
           ],
         ),
       ),
