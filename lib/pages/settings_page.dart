@@ -5,13 +5,13 @@ import '../components/my_app_bar.dart';
 import '../theme/theme_provider.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  const SettingsPage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: const MyAppBar(
+      appBar: MyAppBar(
         title: "S E T T I N G S",
         actions: [],
       ),
@@ -31,15 +31,12 @@ class SettingsPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // dark mode
                     Text(
                       "Dark Mode",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.inversePrimary),
                     ),
-
-                    // switch toggle
                     CupertinoSwitch(
                       onChanged: (value) =>
                           Provider.of<ThemeProvider>(context, listen: false)

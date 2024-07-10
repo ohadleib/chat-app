@@ -11,7 +11,6 @@ class ChatPage extends StatefulWidget {
   final String receiverID;
 
   const ChatPage({
-    super.key,
     required this.receiverEmail,
     required this.receiverID,
   });
@@ -24,80 +23,33 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
-
-  // for textfield focus
   FocusNode myFocusNode = FocusNode();
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    // Add listener to focus node
     myFocusNode.addListener(() {
       if (myFocusNode.hasFocus) {
-        print("TextField has focus");
-
-        // need this delay so that the keyboard shows up,
-        // then the amount of remaining space will be calculated,
-        // then scroll
-        Future.delayed(const Duration(milliseconds: 500), () {
-          _scrollDown();
-        });
-      } else {
-        print("TextField has lost focus");
+        Future.delayed(const Duration(milliseconds: 500), _scrollDown);
       }
     });
-
-    // wait a bit for listview to be built, then scroll to bottom
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _scrollDown();
-    });
+    Future.delayed(const Duration(milliseconds: 500), _scrollDown);
   }
 
   @override
   void dispose() {
-    // Clean up the focus node when the Form is disposed.
     myFocusNode.dispose();
     super.dispose();
   }
 
-  // send message
   void sendMessage() async {
-    // if there is something typed to send
     if (_messageController.text.isNotEmpty) {
-      // send message
-      await _chatService.sendMessage(
-          widget.receiverID, _messageController.text);
-      // clear text controller
+      await _chatService.sendMessage(widget.receiverID, _messageController.text);
       _messageController.clear();
+      _scrollDown();
     }
-
-    _scrollDown();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(
-        title: widget.receiverEmail,
-        actions: const [],
-      ),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Column(
-        children: [
-          // all messages
-          Expanded(
-            child: _buildMessageList(),
-          ),
-
-          // user input
-          _buildUserInput()
-        ],
-      ),
-    );
-  }
-
-  // scroll controller
-  final ScrollController _controller = ScrollController();
 
   void _scrollDown() {
     _controller.animateTo(
@@ -107,48 +59,34 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  // build message list
   Widget _buildMessageList() {
     String senderID = _authService.getCurrentUser()!.uid;
     return StreamBuilder(
       stream: _chatService.getMessages(widget.receiverID, senderID),
       builder: (context, snapshot) {
-        // errors
         if (snapshot.hasError) {
           return Text('Error${snapshot.error}');
         }
-
-        // loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading..");
         }
-
-        // list view
         return ListView(
           controller: _controller,
-          children:
-              snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
+          children: snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
         );
       },
     );
   }
 
-  // build message item
   Widget _buildMessageItem(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-    // is current user
     bool isCurrentUser = data['senderID'] == _authService.getCurrentUser()!.uid;
-
-    // align message to the right if sender is the current user, otherwise left
-    var alignment =
-        isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
     return Container(
       alignment: alignment,
       child: Column(
-        crossAxisAlignment:
-            isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           ChatBubble(
             message: data["message"],
@@ -159,13 +97,11 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  // build message input
   Widget _buildUserInput() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 50.0),
       child: Row(
         children: [
-          // textfield should take up most of the space
           Expanded(
             child: MyTextField(
               controller: _messageController,
@@ -174,8 +110,6 @@ class _ChatPageState extends State<ChatPage> {
               focusNode: myFocusNode,
             ),
           ),
-
-          // send button
           Container(
             decoration: const BoxDecoration(
               color: Colors.green,
@@ -190,6 +124,23 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MyAppBar(
+        title: widget.receiverEmail,
+        actions: const [],
+      ),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Column(
+        children: [
+          Expanded(child: _buildMessageList()),
+          _buildUserInput()
         ],
       ),
     );

@@ -3,12 +3,10 @@ import '../services/auth/auth_service.dart';
 import '../pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+  const MyDrawer();
 
-  // logout
   void logout() {
-    final authService = AuthService();
-    authService.signOut();
+    AuthService().signOut();
   }
 
   @override
@@ -20,7 +18,6 @@ class MyDrawer extends StatelessWidget {
         children: [
           Column(
             children: [
-              // app logo
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: DrawerHeader(
@@ -35,8 +32,6 @@ class MyDrawer extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // home list tile
               Padding(
                 padding: const EdgeInsets.only(left: 25.0, top: 10),
                 child: ListTile(
@@ -45,18 +40,13 @@ class MyDrawer extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                 ),
               ),
-
-              // settings list tile
               Padding(
                 padding: const EdgeInsets.only(left: 25.0, top: 0),
                 child: ListTile(
                   title: const Text("S E T T I N G S"),
                   leading: const Icon(Icons.settings),
                   onTap: () {
-                    // pop drawer
                     Navigator.pop(context);
-
-                    // go to settings page
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -68,8 +58,6 @@ class MyDrawer extends StatelessWidget {
               ),
             ],
           ),
-
-          // logout list tile
           Padding(
             padding: const EdgeInsets.only(left: 25.0, bottom: 25),
             child: ListTile(

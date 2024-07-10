@@ -7,41 +7,21 @@ import '../services/chat/chat_service.dart';
 import 'chat_page.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  HomePage();
 
-  // chat & auth service
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: const MyAppBar(
-        title: "U S E R S",
-        actions: [],
-      ),
-      drawer: const MyDrawer(),
-      body: _buildUserList(),
-    );
-  }
-
-  // build a list of users except for the current logged in user
   Widget _buildUserList() {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _chatService.getUsersStream(),
       builder: (context, snapshot) {
-        // error
         if (snapshot.hasError) {
           return const Text("Error");
         }
-
-        // loading..
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading..");
         }
-
-        // list view
         return ListView(
           children: snapshot.data!
               .map<Widget>((userData) => _buildUserListItem(userData, context))
@@ -51,15 +31,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // build individual list tile for user
   Widget _buildUserListItem(
       Map<String, dynamic> userData, BuildContext context) {
-    // display all users except current user
     if (_authService.getCurrentUser()!.email != userData["email"]) {
       return UserTile(
         text: userData["email"],
         onTap: () {
-          // tapped on a user -> go to chat page
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -74,5 +51,18 @@ class HomePage extends StatelessWidget {
     } else {
       return Container();
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: MyAppBar(
+        title: "U S E R S",
+        actions: [],
+      ),
+      drawer: MyDrawer(),
+      body: _buildUserList(),
+    );
   }
 }

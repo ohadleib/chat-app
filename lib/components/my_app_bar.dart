@@ -4,13 +4,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
 
-  const MyAppBar({
-    super.key,
-    required this.title,
-    required this.actions,
-  });
+  const MyAppBar({required this.title, required this.actions});
 
-  // Overriding the preferredSize to pass AppBar's dimensions to the parent.
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 

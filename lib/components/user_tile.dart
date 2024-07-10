@@ -4,11 +4,7 @@ class UserTile extends StatelessWidget {
   final String text;
   final void Function()? onTap;
 
-  const UserTile({
-    super.key,
-    required this.text,
-    required this.onTap,
-  });
+  const UserTile({required this.text, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +19,6 @@ class UserTile extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         child: Row(
           children: [
-            // icon
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Icon(
@@ -31,8 +26,6 @@ class UserTile extends StatelessWidget {
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
-
-            // user name
             Text(text),
           ],
         ),

@@ -6,18 +6,11 @@ class ChatBubble extends StatelessWidget {
   final String message;
   final bool isCurrentUser;
 
-  const ChatBubble({
-    super.key,
-    required this.message,
-    required this.isCurrentUser,
-  });
+  const ChatBubble({required this.message, required this.isCurrentUser});
 
   @override
   Widget build(BuildContext context) {
-    // light vs dark mode for the correct bubble colors
-    bool isDarkMode =
-        Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
-
+    bool isDarkMode = Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 25),
@@ -30,9 +23,7 @@ class ChatBubble extends StatelessWidget {
       child: Text(
         message,
         style: TextStyle(
-          color: isCurrentUser
-              ? Colors.white
-              : (isDarkMode ? Colors.white : Colors.black),
+          color: isCurrentUser ? Colors.white : (isDarkMode ? Colors.white : Colors.black),
         ),
       ),
     );
