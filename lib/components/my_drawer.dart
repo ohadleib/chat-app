@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import '../services/auth/auth_service.dart';
+import '../pages/login_page.dart';
 import '../pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer();
 
-  void logout() {
-    AuthService().signOut();
+  void logout(BuildContext context) {
+    final authService = AuthService();
+    authService.signOut().then((_) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+        (Route<dynamic> route) => false,
+      );
+    });
   }
 
   @override
@@ -63,7 +71,7 @@ class MyDrawer extends StatelessWidget {
             child: ListTile(
               title: const Text("L O G O U T"),
               leading: const Icon(Icons.logout),
-              onTap: logout,
+              onTap: () => logout(context),
             ),
           ),
         ],

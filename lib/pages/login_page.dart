@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../components/my_button.dart';
 import '../components/my_textfield.dart';
 import '../services/auth/auth_service.dart';
+import 'home_page.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
-  final void Function()? onTap;
-
-  const LoginPage({required this.onTap});
+  const LoginPage();
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -18,10 +18,16 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() async {
     final authService = AuthService();
+
     try {
       await authService.signInWithEmailPassword(
         emailController.text,
         passwordController.text,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     } catch (e) {
       String errorMessage = authService.getErrorMessage(e.toString());
@@ -35,13 +41,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void forgotPw() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        title: const Text("User tapped forgot password."),
-      ),
+  void navigateToRegister() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RegisterPage()),
     );
   }
 
@@ -88,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
-                        onTap: forgotPw,
+                        onTap: () {},
                         child: Text(
                           'Forgot Password?',
                           style: TextStyle(
@@ -111,11 +114,13 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text(
                       'Not a member?',
-                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: widget.onTap,
+                      onTap: navigateToRegister,
                       child: Text(
                         'Register now',
                         style: TextStyle(

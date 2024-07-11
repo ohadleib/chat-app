@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import '../components/my_button.dart';
 import '../components/my_textfield.dart';
 import '../services/auth/auth_service.dart';
+import 'home_page.dart';
 
 class RegisterPage extends StatefulWidget {
-  final void Function()? onTap;
-
-  const RegisterPage({required this.onTap});
+  const RegisterPage();
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -16,6 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
   final authService = AuthService();
 
   void register() async {
@@ -24,6 +24,11 @@ class _RegisterPageState extends State<RegisterPage> {
         await authService.signUpWithEmailPassword(
           emailController.text,
           passwordController.text,
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } catch (e) {
         showDialog(
@@ -98,11 +103,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     Text(
                       'Already a member?',
-                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: widget.onTap,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       child: const Text(
                         'Login now',
                         style: TextStyle(
@@ -111,7 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
